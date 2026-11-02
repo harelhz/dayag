@@ -1,0 +1,80 @@
+Received: from VI1PR04MB9999.eurprd04.prod.outlook.com (10.20.30.40) by
+ VI1PR04MB1111.eurprd04.prod.outlook.com with Microsoft SMTP Server; Mon, 02 Nov 2026 07:02:10 +0000
+From: Noa Levi <noa.levi@contoso.com>
+To: phishing@contoso.com
+Subject: FW: Your Microsoft 365 password expires today
+Date: Mon, 02 Nov 2026 07:02:08 +0000
+Message-ID: <VI1PR04MB9999.report.7781@contoso.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="==dayag-06-0=="
+
+--==dayag-06-0==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+Hi SOC team, this looks suspicious. Reporting it as an attachment.
+
+Noa
+
+--==dayag-06-0==
+Content-Type: message/rfc822; boundary="==dayag-06-2=="
+Content-Transfer-Encoding: 8bit
+Content-Disposition: attachment; filename="Your Microsoft 365 password expires today.eml"
+MIME-Version: 1.0
+
+Received: from mail.micros0ft-security.com (203.0.113.77) by VI1PR04MB5678.eurprd04.prod.outlook.com
+ with Microsoft SMTP Server; Mon, 02 Nov 2026 06:15:31 +0000
+Authentication-Results: spf=pass (sender IP is 203.0.113.77) smtp.mailfrom=micros0ft-security.com;
+ dkim=pass (signature was verified) header.d=micros0ft-security.com;dmarc=pass action=none
+ header.from=micros0ft-security.com;compauth=pass reason=100
+From: Microsoft 365 <no-reply@micros0ft-security.com>
+To: noa.levi@contoso.com
+Subject: Your Microsoft 365 password expires today
+Date: Mon, 02 Nov 2026 06:15:29 +0000
+Message-ID: <b7e1.20261102061529@micros0ft-security.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="==dayag-06-3=="
+
+--==dayag-06-3==
+Content-Type: multipart/alternative; boundary="==dayag-06-4=="
+
+--==dayag-06-4==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Your Microsoft 365 password expires today.
+
+Keep my current password: https://eur03.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fm365-=
+login-portal.web.app%2Fauth%3Fuser%3Dnoa.levi%2540contoso.com&data=3D05%7C02%7Cnoa.levi%40contoso.c=
+om%7C1a2b3c4d%7C0%7C0%7C638123456789&sdata=3DZm9vYmFyYmF6cXV4&reserved=3D0
+
+The new password policy is attached. The archive password is 2026.
+
+--==dayag-06-4==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body><h2>Microsoft 365</h2><p>The password for noa.levi@contoso.com <b>expires today</b>.</p=
+><p><a href=3D"https://eur03.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fm365-login-porta=
+l.web.app%2Fauth%3Fuser%3Dnoa.levi%2540contoso.com&data=3D05%7C02%7Cnoa.levi%40contoso.com%7C1a2b3c=
+4d%7C0%7C0%7C638123456789&sdata=3DZm9vYmFyYmF6cXV4&reserved=3D0">Keep my current password</a></p><p=
+>The new password policy is attached. The archive password is <b>2026</b>.</p></body></html>
+
+--==dayag-06-4==--
+
+--==dayag-06-3==
+Content-Type: application/zip
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="Password_Policy_2026.zip"
+MIME-Version: 1.0
+
+UEsDBBQAAQAIAABIX13dnHyGJgAAACQAAAAcAAAAUGFzc3dvcmRfUG9saWN5XzIwMjYucGRmLmxua3NJrExMVyhOzC3ISbVSyEgs
+ys1JLS5WKMhJTE7NyM9JSS3S4wIAUEsDBBQAAQAIAABIX11oZ7aEMgAAADAAAAAKAAAAcmVhZG1lLnR4dPMvSM1TKMlIVSjIz8lM
+rlRIyU8uzU3NK1EoyVfITk0tUKjMLy1SKEgsLi7PL0rR4wIAUEsBAhQDFAABAAgAAEhfXd2cfIYmAAAAJAAAABwAAAAAAAAAAAAA
+AIABAAAAAFBhc3N3b3JkX1BvbGljeV8yMDI2LnBkZi5sbmtQSwECFAMUAAEACAAASF9daGe2hDIAAAAwAAAACgAAAAAAAAAAAAAA
+gAFgAAAAcmVhZG1lLnR4dFBLBQYAAAAAAgACAIIAAAC6AAAAAAA=
+
+--==dayag-06-3==--
+
+--==dayag-06-0==--

@@ -1,0 +1,49 @@
+Received: from out-21.smtp.github.com (out-21.smtp.github.com [192.30.252.204]) by mx.google.com
+ with ESMTPS id a1si123456qkb.401.2026.11.02.07.41.12 for <noa.levi@contoso.com>; Mon, 02 Nov 2026
+ 07:41:12 -0800 (PST)
+Authentication-Results: mx.google.com; dkim=pass header.i=@github.com header.s=pf2023
+ header.b=Kx9f2a1Q; spf=pass (google.com: domain of noreply@github.com designates 192.30.252.204 as
+ permitted sender) smtp.mailfrom=noreply@github.com; dmarc=pass (p=REJECT sp=REJECT dis=NONE)
+ header.from=github.com
+Return-Path: <noreply@github.com>
+Received: from github.com (hubbernetes-node-6c1d.ac4-iad.github.net [10.52.112.34]) by
+ smtp.github.com (Postfix) with ESMTPA id 4R8kQ01xyz; Mon, 02 Nov 2026 07:41:11 -0800 (PST)
+From: Dana Cohen <notifications@github.com>
+To: harelhz/shomer <shomer@noreply.github.com>
+Cc: Noa Levi <noa.levi@contoso.com>
+Subject: Re: [harelhz/shomer] Add Hebrew translations for the popup (PR #14)
+Date: Mon, 02 Nov 2026 07:41:11 -0800
+Message-ID: <harelhz/shomer/pull/14/c2468013579@github.com>
+In-Reply-To: <harelhz/shomer/pull/14@github.com>
+References: <harelhz/shomer/pull/14@github.com>
+List-ID: harelhz/shomer <shomer.harelhz.github.com>
+List-Unsubscribe: <https://github.com/notifications/unsubscribe/AB12CD34>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="==dayag-01-0=="
+
+--==dayag-01-0==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+
+@dana-cohen approved these changes.
+
+Looks good to me. The RTL layout works in the popup and the options page.
+
+--
+Reply to this email directly, view it on GitHub:
+https://github.com/harelhz/shomer/pull/14#pullrequestreview-2468013579
+You are receiving this because you were mentioned.
+
+--==dayag-01-0==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body><p><b>@dana-cohen</b> approved these changes.</p><p>Looks good to me. The RTL layout wo=
+rks in the popup and the options page.</p><p style=3D"font-size:small">&mdash;<br>Reply to this ema=
+il directly, <a href=3D"https://github.com/harelhz/shomer/pull/14#pullrequestreview-2468013579">vie=
+w it on GitHub</a>, or <a href=3D"https://github.com/notifications/unsubscribe-auth/AB12CD34">unsub=
+scribe</a>.</p><img src=3D"https://github.com/notifications/beacon/AB12CD34.gif" height=3D"1" width=
+=3D"1" alt=3D""></body></html>
+
+--==dayag-01-0==--

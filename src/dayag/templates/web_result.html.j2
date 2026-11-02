@@ -1,0 +1,12 @@
+{% extends "web_base.html.j2" %}
+{% block title %}{{ r.verdict.label }} · {{ r.summary.subject | show(60) or "(no subject)" }} · Dayag{% endblock %}
+{% block content %}
+<div class="actions no-print">
+  <a class="button" href="/">← Analyze another</a>
+  <span class="topbar__spacer"></span>
+  {% for d in downloads %}
+  <a class="button" href="{{ d.href }}" download="{{ d.filename }}">{{ d.label }}</a>
+  {% endfor %}
+</div>
+{% include "report_body.html.j2" %}
+{% endblock %}

@@ -1,0 +1,67 @@
+Received: from mail.dhl-express-billing.com (mail.dhl-express-billing.com [203.0.113.120]) by
+ mx.contoso.com with ESMTP id 77aa66bb; Sat, 31 Oct 2026 10:05:12 +0200
+Authentication-Results: mx.contoso.com; spf=fail smtp.mailfrom=dhl-express-billing.com; dkim=none;
+ dmarc=fail (p=QUARANTINE) header.from=dhl-express-billing.com
+Authentication-Results: mail.dhl-express-billing.com; spf=pass
+ smtp.mailfrom=dhl-express-billing.com; dkim=pass header.d=dhl-express-billing.com; dmarc=pass
+ header.from=dhl-express-billing.com
+From: DHL Express <billing@dhl-express-billing.com>
+To: logistics@contoso.com
+Subject: DHL shipment 4410293857: documents and receipt
+Date: Sat, 31 Oct 2026 10:05:10 +0200
+Message-ID: <4410293857.20261031@dhl-express-billing.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="==dayag-07-0=="
+
+--==dayag-07-0==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Dear customer,
+
+Your shipment 4410293857 is on hold. Please review the attached shipping documents and receipt, and=
+ pay the outstanding customs fee to release it.
+
+DHL Express Billing
+
+--==dayag-07-0==
+Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="DHL_Shipping_Documents.docx"
+MIME-Version: 1.0
+
+UEsDBBQAAAAIAABIX133VP4j2QAAAGQBAAATAAAAW0NvbnRlbnRfVHlwZXNdLnhtbJWQu1LDMBBFf0WjlrHWUDAMYzsFjxIowgfs
+yGtbg16jVUL4e9YJSZGOUrpn75G22xyCV3sq7FLs9a1ptaJo0+ji3OvP7WvzoDdDt/3JxErQyL1eas2PAGwXCsgmZYqSTKkErHIs
+M2S0XzgT3LXtPdgUK8Xa1LVDD90zTbjzVb0c5PqkLeRZq6cTuLp6jTl7Z7FKDvs4XlmaP4ORySPDi8t8I4CGoXuX/xQ3kvrAUt8w
+SB18pzLCmOwuiMKs4L98aZqcpcv82pZLssQsiwreXJKALp7fAce1Db9QSwMEFAAAAAgAAEhfXVj2sByiAAAA2QAAABEAAAB3b3Jk
+L2RvY3VtZW50LnhtbEWOTQ7CIBBGr0JY6cJSXRjT9GfTeAH1AAjYkhRmwqC1txdqjJs3mXwv30zdvd3EXiaQBd/wfVFyZrwCbf3Q
+8Nv1vDvxrq3nSoN6OuMjS76nam74GCNWQpAajZNUABqfsgcEJ2NawyBmCBoDKEOU6twkDmV5FE5az3PlHfSSJ2aEjNheRouYZPa7
+R2zTy0UOjKTDyWxrkbXMsBJXfqvE/832A1BLAwQUAAAACAAASF9dw5j3y6UAAAD1AAAAEQAAAHdvcmQvc2V0dGluZ3MueG1sjY/N
+CsIwEIRfpezdpnoQCf25iOC9PkBItm2g+WF3tT6+EQWvHmdnZz6mHZ5hrR5I7FPsYF83UGG0yfk4d3AbL7sTDH27aUaRcuOq/EfW
+WweLSNZKsV0wGK5Txli8KVEwUiTNakvkMiWLzCUaVnVomqMKxkd4VxoRU8JuxJBXI1iR9q4Duro9fDH0DyZNk7d4TvYeMMoHQlga
+yyRefGZQfat+E/oXUEsDBBQAAAAIAABIX11CTqjJyQAAAEoBAAAcAAAAd29yZC9fcmVscy9zZXR0aW5ncy54bWwucmVsc42Qz07D
+MAyHXyXKnThBYhuo7S6AtAOXqTxAlLhtRPNHiTeNt58PgJjEgaPt3/fZcre/xFWcsbaQUy+N0lJgctmHNPfyfXy928n90B1xtcSJ
+toTSBCOp9XIhKk8AzS0YbVO5YOLJlGu0xGWdoVj3YWeEe603UH875K1THHwv68EbKcbPgv9x52kKDp+zO0VM9McKsESWeT9iLNxH
+dts6I/3YzeNOPRhltFbbLdBXrEFI58xu5TPFb+gtez7r5UJYk10lDB3cPGW4AlBLAQIUAxQAAAAIAABIX133VP4j2QAAAGQBAAAT
+AAAAAAAAAAAAAACAAQAAAABbQ29udGVudF9UeXBlc10ueG1sUEsBAhQDFAAAAAgAAEhfXVj2sByiAAAA2QAAABEAAAAAAAAAAAAA
+AIABCgEAAHdvcmQvZG9jdW1lbnQueG1sUEsBAhQDFAAAAAgAAEhfXcOY98ulAAAA9QAAABEAAAAAAAAAAAAAAIAB2wEAAHdvcmQv
+c2V0dGluZ3MueG1sUEsBAhQDFAAAAAgAAEhfXUJOqMnJAAAASgEAABwAAAAAAAAAAAAAAIABrwIAAHdvcmQvX3JlbHMvc2V0dGlu
+Z3MueG1sLnJlbHNQSwUGAAAAAAQABAAJAQAAsgMAAAAA
+
+--==dayag-07-0==
+Content-Type: application/pdf
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="DHL_Receipt_4410293857.pdf"
+MIME-Version: 1.0
+
+JVBERi0xLjcKMSAwIG9iaiA8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgL09wZW5BY3Rpb24gNCAwIFIgPj4gZW5kb2Jq
+CjIgMCBvYmogPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4gZW5kb2JqCjMgMCBvYmogPDwgL1R5cGUg
+L1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCA2MTIgNzkyXSAvQW5ub3RzIFs1IDAgUl0gPj4gZW5kb2JqCjQgMCBv
+YmogPDwgL1MgL0phdmFTY3JpcHQgL0pTIChhcHAuYWxlcnRcKCdEYXlhZyBzYW1wbGUnXCk7KSA+PiBlbmRvYmoKNSAwIG9iaiA8
+PCAvVHlwZSAvQW5ub3QgL1N1YnR5cGUgL0xpbmsgL1JlY3QgWzcyIDYwMCAzMDAgNjIwXSAvQSA8PCAvUyAvVVJJIC9VUkkgKGh0
+dHA6Ly9kaGwtZXhwcmVzcy1iaWxsaW5nLmNvbS9yZWNlaXB0L3ZpZXc/aWQ9ODgyMzEpID4+ID4+IGVuZG9iago2IDAgb2JqIDw8
+IC9MZW5ndGggNzIgL0ZpbHRlciAvRmxhdGVEZWNvZGUgPj4Kc3RyZWFtCnics7FR0A9W0A8N8oQQGhklJQXFVvr6KRk5uqkVBUWp
+xcW6SZk5OZl56XrJ+bn6RanJqZkFJfop+eV5OfmJKZoKdnYA8hsW/QplbmRzdHJlYW0KZW5kb2JqCnRyYWlsZXIgPDwgL1Jvb3Qg
+MSAwIFIgPj4KJSVFT0YK
+
+--==dayag-07-0==--

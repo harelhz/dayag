@@ -1,0 +1,42 @@
+Received: from mail.paypal-resolution-center.com (mail.paypal-resolution-center.com [203.0.113.45])
+ by mx.google.com with ESMTPS id k7si99887766qtb.12.2026.10.30; Fri, 30 Oct 2026 03:12:09 -0700
+ (PDT)
+Authentication-Results: mx.google.com; dkim=pass header.i=@paypal-resolution-center.com
+ header.s=mail; spf=pass (google.com: domain of service@paypal-resolution-center.com designates
+ 203.0.113.45 as permitted sender) smtp.mailfrom=service@paypal-resolution-center.com; dmarc=pass
+ (p=NONE sp=NONE dis=NONE) header.from=paypal-resolution-center.com
+Return-Path: <service@paypal-resolution-center.com>
+From: PayPal <service@paypal-resolution-center.com>
+To: noa.levi@contoso.com
+Subject: Your account has been limited - action required
+Date: Fri, 30 Oct 2026 11:12:07 +0100
+Message-ID: <20261030101207.4f2a@paypal-resolution-center.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="==dayag-02-0=="
+
+--==dayag-02-0==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Dear Customer,
+
+We noticed unusual activity on your PayPal account. As a precaution your account has been limited. =
+To restore full access you must verify your identity within 24 hours, otherwise your account will b=
+e suspended.
+
+Verify now: https://www.paypal.com/signin
+
+PayPal Security Team
+
+--==dayag-02-0==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+<html><body style=3D"font-family:Arial"><p>Dear Customer,</p><p>We noticed <b>unusual activity</b> =
+on your PayPal account. As a precaution your account has been limited. To restore full access you m=
+ust verify your identity within 24 hours, otherwise your account will be suspended.</p><p><a href=
+=3D"https://www.xn--pypal-4ve.com/signin?country.x=3DUS&locale.x=3Den_US">https://www.paypal.com/si=
+gnin</a></p><p>PayPal Security Team</p></body></html>
+
+--==dayag-02-0==--

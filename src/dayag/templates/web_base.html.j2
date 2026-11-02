@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>{% block title %}Dayag{% endblock %}</title>
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/dayag.css">
+<script src="/static/app.js" defer></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="brand" href="/">{% include "_brand.html.j2" %}<span class="brand__name">Dayag</span>
+      <span class="brand__tag">phishing email analyzer</span></a>
+    <span class="topbar__spacer"></span>
+    <a class="plain" href="https://github.com/harelhz/dayag" rel="noreferrer">GitHub</a>
+  </div>
+</header>
+<main class="page">
+{% block content %}{% endblock %}
+</main>
+</body>
+</html>

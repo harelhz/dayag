@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{# Defence in depth: even if something slipped through escaping, this page
+   cannot load remote resources or run scripts. #}
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:">
+<meta name="referrer" content="no-referrer">
+<title>Dayag report: {{ r.verdict.label }} · {{ r.summary.subject | show(80) or "(no subject)" }}</title>
+<style>
+{{ css | safe }}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__inner">
+    <span class="brand">{% include "_brand.html.j2" %}<span class="brand__name">Dayag</span>
+      <span class="brand__tag">phishing analysis report</span></span>
+  </div>
+</header>
+<main class="page">
+{% include "report_body.html.j2" %}
+</main>
+</body>
+</html>

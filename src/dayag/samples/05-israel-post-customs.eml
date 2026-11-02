@@ -1,0 +1,49 @@
+Received: from webserver01.example-hosting.top (unknown [198.51.100.23]) by
+ AM4PEPF00027A6C.mail.protection.outlook.com (10.167.16.89) with Microsoft SMTP Server id
+ 15.20.8093.14; Thu, 29 Oct 2026 18:44:02 +0000
+Authentication-Results: spf=softfail (sender IP is 198.51.100.23)
+ smtp.mailfrom=israelpost-delivery.top; dkim=none (message not signed) header.d=none;dmarc=none
+ action=none header.from=israelpost-delivery.top;compauth=fail reason=601
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning israelpost-delivery.top
+ discourages use of 198.51.100.23 as permitted sender)
+Return-Path: <www-data@webserver01.example-hosting.top>
+Received: by webserver01.example-hosting.top (Postfix, from userid 33) id 8C1F2A0; Thu, 29 Oct 2026
+ 20:43:58 +0200 (IST)
+From: =?utf-8?b?15PXldeQ16gg15nXqdeo15DXnA==?= <noreply@israelpost-delivery.top>
+To: noa.levi@contoso.com
+Subject: =?utf-8?b?15TXl9eR15nXnNeUINep15zXmiDXntee16rXmdeg15QgLSDXoNeT16jXqSDXqtep15zXldedINeT?=
+ =?utf-8?b?157XmSDXnteb16E=?=
+Date: Thu, 29 Oct 2026 20:43:58 +0200
+Message-ID: <8c1f2a0.4417@webserver01.example-hosting.top>
+X-Mailer: PHPMailer 6.8.0 (https://github.com/PHPMailer/PHPMailer)
+X-PHP-Originating-Script: 1001:wp-content/uploads/2026/10/mailer.php
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="==dayag-05-0=="
+
+--==dayag-05-0==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+
+15zXp9eV15cg15nXp9eoLAoK15TXl9eR15nXnNeUINep15zXmiDXnteh16TXqCBSUjQ4MjkxMzU3MElMINee16LXldeb15HXqiDX
+kdee16jXm9eWINeU157XmdeV158g15HXqdecINeT157XmSDXnteb16Eg16nXnNeQINep15XXnNee15UuCteZ16kg15zXlNeh15PX
+mdeoINeq16nXnNeV150g15HXodeaIDkuOTAg16ki15cg16rXldeaIDI0INep16LXldeqLCDXkNeX16jXqiDXlNeX15HXmdec15Qg
+16rXldeX15bXqCDXnNep15XXnNeXLgoK15zXntei16fXkTogaHR0cHM6Ly9pc3JhZWxwb3N0LWRlbGl2ZXJ5LnRvcC90cmFjaz9p
+ZD1SUjQ4MjkxMzU3MElMCtec16rXqdec15XXnTogaHR0cHM6Ly9iaXQubHkvZGF5YWctc2FtcGxlLWlsCgrXk9eV15DXqCDXmdep
+16jXkNecCg==
+
+--==dayag-05-0==
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+
+PGh0bWwgZGlyPSJydGwiPjxib2R5IHN0eWxlPSJmb250LWZhbWlseTpBcmlhbCI+PHA+15zXp9eV15cg15nXp9eoLDwvcD48cD7X
+lNeX15HXmdec15Qg16nXnNeaINee16HXpNeoIDxiPlJSNDgyOTEzNTcwSUw8L2I+INee16LXldeb15HXqiDXkdee16jXm9eWINeU
+157XmdeV158g15HXqdecINeT157XmSDXnteb16Eg16nXnNeQINep15XXnNee15UuPC9wPjxwPteZ16kg15zXlNeh15PXmdeoINeq
+16nXnNeV150g15HXodeaIDkuOTAg16ki15cg16rXldeaIDI0INep16LXldeqLCDXkNeX16jXqiDXlNeX15HXmdec15Qg16rXldeX
+15bXqCDXnNep15XXnNeXLjwvcD48cD48YSBocmVmPSJodHRwOi8vMTk4LjUxLjEwMC4yMzo4MDgwL2lsL3Bvc3QvcGF5bWVudC5w
+aHA/aWQ9UlI0ODI5MTM1NzBJTCIgc3R5bGU9ImJhY2tncm91bmQ6I2Q0MDAwMDtjb2xvcjojZmZmO3BhZGRpbmc6MTBweCAyNHB4
+O2JvcmRlci1yYWRpdXM6NHB4Ij7XnNeq16nXnNeV150g157XkNeV15HXmNeXPC9hPjwvcD48cD48YSBocmVmPSJodHRwczovL2lz
+cmFlbHBvc3QtZGVsaXZlcnkudG9wL3RyYWNrP2lkPVJSNDgyOTEzNTcwSUwiPtee16LXp9eRINee16nXnNeV15c8L2E+PC9wPjxw
+PteT15XXkNeoINeZ16nXqNeQ15w8L3A+PC9ib2R5PjwvaHRtbD4K
+
+--==dayag-05-0==--

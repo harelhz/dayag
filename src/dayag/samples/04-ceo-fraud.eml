@@ -1,0 +1,29 @@
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com
+ (mail-am6eur05olkn2101.outbound.protection.outlook.com [40.92.58.101]) by mx.google.com with ESMTPS
+ id u3si55443322wrt.88.2026.11.01; Sun, 01 Nov 2026 06:02:51 -0800 (PST)
+Authentication-Results: mx.google.com; dkim=pass header.i=@outlook.com header.s=selector1; spf=pass
+ (google.com: domain of yossi.mizrahi.ceo@outlook.com designates 40.92.58.101 as permitted sender)
+ smtp.mailfrom=yossi.mizrahi.ceo@outlook.com; dmarc=pass (p=NONE sp=QUARANTINE dis=NONE)
+ header.from=outlook.com
+Return-Path: <yossi.mizrahi.ceo@outlook.com>
+From: Yossi Mizrahi <yossi.mizrahi.ceo@outlook.com>
+Reply-To: Yossi Mizrahi <y.mizrahi.office@gmail.com>
+To: noa.levi@contoso.com
+Subject: Urgent request
+Date: Sun, 01 Nov 2026 16:02:49 +0200
+Message-ID: <AM6PR05MB1234ABCD@AM6PR05MB1234.eurprd05.prod.outlook.com>
+X-Originating-IP: [198.51.100.188]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Hi Noa,
+
+Are you available? I need a quick favor.
+
+We are closing the acquisition today and I need you to process a wire transfer of $48,500 to our ne=
+w vendor. I will send the bank details as soon as you confirm. Please keep this confidential until =
+the deal is announced, and don't call me, I'm in meetings all day. Reply by email only.
+
+Yossi
+Sent from my iPhone

@@ -1,0 +1,227 @@
+{# The report itself, shared by the standalone HTML file and the web UI.
+   Every value from the email goes through autoescaping, and links are
+   defanged text, never <a> elements. #}
+<section class="card verdict verdict--{{ r.verdict.value }}">
+  <div>
+    <div class="verdict__eyebrow">Verdict</div>
+    <h1 class="verdict__label">{{ r.verdict.label }}</h1>
+    <div class="verdict__subject">{{ r.summary.subject | show or "(no subject)" }}</div>
+    <div class="verdict__meta">
+      {{ r.findings | rejectattr("rule.points", "le", 0) | list | length }} risk findings
+      · {{ r.links | length }} link{{ "" if r.links | length == 1 else "s" }}
+      · {{ r.attachments | length }} attachment{{ "" if r.attachments | length == 1 else "s" }}
+      · {{ "online lookups on" if r.online else "offline analysis" }}
+    </div>
+  </div>
+  <div class="score">
+    <div class="score__value">{{ r.score }}<span>/100</span></div>
+    <svg class="score__bar" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true">
+      <rect class="score__track" width="100" height="8" rx="4"></rect>
+      <rect class="score__fill" width="{{ [r.score, 2] | max }}" height="8" rx="4"></rect>
+    </svg>
+    <div class="score__scale"><span>0</span><span>15</span><span>40</span><span>70</span><span>100</span></div>
+  </div>
+</section>
+
+{% if r.reported_wrapper %}
+<div class="notice">
+  This file was a report wrapper ("{{ r.reported_wrapper | show }}"). The email attached to it was analysed.
+</div>
+{% endif %}
+
+<section class="card">
+  <div class="card__head"><h2>Message</h2></div>
+  <dl class="kv">
+    <dt>From</dt><dd>{{ r.summary.sender | show }}</dd>
+    {% if r.summary.reply_to %}<dt>Reply-To</dt><dd>{{ r.summary.reply_to | show }}</dd>{% endif %}
+    {% if r.summary.return_path %}<dt>Return-Path</dt><dd>{{ r.summary.return_path | show }}</dd>{% endif %}
+    <dt>To</dt><dd>{{ r.summary.to | show or "—" }}</dd>
+    {% if r.summary.cc %}<dt>Cc</dt><dd>{{ r.summary.cc | show }}</dd>{% endif %}
+    <dt>Date</dt><dd>{{ r.summary.date | show or "—" }}</dd>
+    <dt>Message-ID</dt><dd><code>{{ r.summary.message_id | show or "—" }}</code></dd>
+    <dt>Size</dt><dd>{{ r.summary.size | filesize }}</dd>
+  </dl>
+</section>
+
+<section class="card">
+  <div class="card__head"><h2>Findings</h2><span class="count">{{ r.findings | length }}</span></div>
+  {% if r.findings %}
+  <ol class="findings">
+    {% for f in r.findings %}
+    <li class="finding sev-{{ f.severity.label }}">
+      <div class="finding__head">
+        <span class="chip">{{ f.severity.label }}</span>
+        <h3>{{ f.rule.title }}</h3>
+        <code class="finding__id">{{ f.rule.id }}</code>
+        <span class="finding__points">{{ "%+d" | format(f.rule.points) }}</span>
+      </div>
+      <p>{{ f.detail | show }}</p>
+      {% if f.evidence %}
+      <ul class="evidence">
+        {% for item in f.evidence[:8] %}<li><code>{{ item | show(300) }}</code></li>{% endfor %}
+        {% if f.evidence | length > 8 %}<li class="muted small">and {{ f.evidence | length - 8 }} more</li>{% endif %}
+      </ul>
+      {% endif %}
+      <details class="why">
+        <summary>Why it matters</summary>
+        <p>{{ f.rule.rationale }}</p>
+        {% if f.rule.attack %}
+        <p class="attack">MITRE ATT&amp;CK:
+          {% for t in f.rule.attack %}<a href="https://attack.mitre.org/techniques/{{ t | replace('.', '/') }}/" rel="noreferrer" target="_blank">{{ t }}</a>{% endfor %}
+        </p>
+        {% endif %}
+      </details>
+    </li>
+    {% endfor %}
+  </ol>
+  {% else %}
+  <p class="muted">Nothing to report.</p>
+  {% endif %}
+</section>
+
+<section class="card">
+  <div class="card__head"><h2>Authentication</h2>
+    <span class="muted small">{{ ("as reported by " ~ r.auth.source) if r.auth.source else "no results in headers" }}</span></div>
+  <div class="auth">
+    {% for name, result, domain in [
+      ("SPF", r.auth.spf, r.auth.spf_domain),
+      ("DKIM", r.auth.dkim, r.auth.dkim_domains | join(", ")),
+      ("DMARC", r.auth.dmarc, (r.auth.dmarc_domain ~ (" · p=" ~ r.auth.dmarc_policy if r.auth.dmarc_policy else ""))),
+    ] %}
+    <div class="auth__tile">
+      <div class="auth__name">{{ name }}</div>
+      <div class="auth__result {{ result | result_class }}">{{ result or "—" }}</div>
+      <div class="auth__domain">{{ domain | show or " " }}</div>
+    </div>
+    {% endfor %}
+    {% if r.auth.compauth %}
+    <div class="auth__tile">
+      <div class="auth__name">CompAuth</div>
+      <div class="auth__result {{ r.auth.compauth | result_class }}">{{ r.auth.compauth }}</div>
+      <div class="auth__domain">Microsoft 365</div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% if r.links %}
+<section class="card">
+  <div class="card__head"><h2>Links</h2><span class="count">{{ r.links | length }}</span>
+    <span class="muted small">defanged; Dayag never visits them</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Destination</th><th>Shown as</th><th>Found in</th><th>Flags</th></tr></thead>
+      <tbody>
+      {% for link in r.links %}
+        <tr>
+          <td class="url">{{ link.url | defang | show(400) }}
+            {% if link.wrapped_by %}<div class="muted small">unwrapped from {{ link.wrapped_by }}</div>{% endif %}</td>
+          <td>{{ link.text | show(120) or "—" }}</td>
+          <td class="small">{{ link.source | show(80) }}</td>
+          <td>{% for flag in link.flags %}<span class="tag">{{ flag }}</span>{% else %}<span class="muted">—</span>{% endfor %}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+{% if r.attachments %}
+<section class="card">
+  <div class="card__head"><h2>Attachments</h2><span class="count">{{ r.attachments | length }}</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Really is</th><th>Size</th><th>SHA-256</th><th>Flags</th></tr></thead>
+      <tbody>
+      {% for a in r.attachments %}
+        <tr>
+          <td>{{ a.filename | show(160) }}{% if a.inline %} <span class="muted small">(inline)</span>{% endif %}
+            {% if a.archive_members %}<div class="muted small">contains: {{ a.archive_members[:10] | map("show") | join(", ") }}{% if a.archive_members | length > 10 %} …{% endif %}</div>{% endif %}
+            {% if a.remote_content %}<div class="muted small">loads: {{ a.remote_content | defang | show(200) }}</div>{% endif %}</td>
+          <td>{{ a.kind }}<div class="muted small">{{ a.content_type }}</div></td>
+          <td class="num">{{ a.size | filesize }}</td>
+          <td class="hash">{{ a.sha256 }}</td>
+          <td>{% for flag in a.flags %}<span class="tag">{{ flag }}</span>{% else %}<span class="muted">—</span>{% endfor %}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+{% if r.hops %}
+<section class="card">
+  <div class="card__head"><h2>Mail path</h2><span class="count">{{ r.hops | length }} hop{{ "" if r.hops | length == 1 else "s" }}</span>
+    <span class="muted small">oldest first; hops before your own servers can be forged</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>From</th><th>IP</th><th>By</th><th>Time (UTC)</th><th>Delay</th></tr></thead>
+      <tbody>
+      {% for h in r.hops %}
+        <tr>
+          <td class="num">{{ h.number }}</td>
+          <td>{{ h.from_host | show(80) or "—" }}</td>
+          <td class="num">{{ h.ip or "—" }}{% if h.internal %} <span class="muted small">internal</span>{% endif %}</td>
+          <td>{{ h.by_host | show(80) or "—" }}{% if h.protocol %}<div class="muted small">{{ h.protocol }}</div>{% endif %}</td>
+          <td class="num">{{ h.timestamp | when }}</td>
+          <td class="num">{{ h.delay | delay }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+{% if r.lookups %}
+<section class="card">
+  <div class="card__head"><h2>Online lookups</h2></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Source</th><th>Target</th><th>Status</th><th>Result</th></tr></thead>
+      <tbody>
+      {% for l in r.lookups %}
+        <tr><td>{{ l.source }}</td><td class="url">{{ l.target | show(200) }}</td><td>{{ l.status }}</td><td>{{ l.summary | show }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+{% if r.iocs %}
+<section class="card">
+  <div class="card__head"><h2>Indicators</h2><span class="count">{{ r.iocs | selectattr("flagged") | list | length }} flagged of {{ r.iocs | length }}</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Type</th><th>Value</th><th>Context</th><th>Flagged</th></tr></thead>
+      <tbody>
+      {% for i in r.iocs %}
+        <tr>
+          <td>{{ i.type }}</td>
+          <td class="url">{{ (i.value | defang) if i.type in ("url", "domain", "email", "ipv4") else i.value }}</td>
+          <td class="small">{{ i.context | show(100) }}</td>
+          <td>{% if i.flagged %}<span class="tag">yes</span>{% else %}<span class="muted">no</span>{% endif %}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endif %}
+
+{% if r.body_preview %}
+<section class="card">
+  <details>
+    <summary><h2 class="inline">Body preview</h2> <span class="muted small">plain text only; HTML is never rendered</span></summary>
+    <pre class="body">{{ r.body_preview }}</pre>
+  </details>
+</section>
+{% endif %}
+
+<div class="footer">
+  Dayag {{ r.tool_version }} · analysed {{ r.analyzed_at | when }} UTC in {{ r.duration_ms }} ms ·
+  {{ "online lookups were enabled" if r.online else "no network requests were made" }}
+</div>

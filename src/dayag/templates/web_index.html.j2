@@ -1,0 +1,52 @@
+{% extends "web_base.html.j2" %}
+{% block title %}Dayag · analyze a suspicious email{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Analyze a suspicious email</h1>
+  <p>Get a verdict with the evidence behind it: sender authentication, spoofing and lookalike
+    domains, malicious links and attachments, and IOCs ready to export.</p>
+</section>
+
+{% if error %}<div class="notice error upload">{{ error }}</div>{% endif %}
+
+<form class="upload card" method="post" action="/analyze" enctype="multipart/form-data">
+  <label class="drop" id="drop">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l8 6 8-6"/><rect x="3" y="5" width="18" height="14" rx="2"/></svg>
+    <strong>Drop an .eml file here</strong>
+    <span class="muted small">or choose one · max {{ max_mb }} MB</span>
+    <input type="file" name="file" accept=".eml,message/rfc822,text/plain">
+  </label>
+  <details>
+    <summary class="muted small">…or paste the raw message source</summary>
+    <textarea name="raw" placeholder="Received: from …&#10;From: …&#10;Subject: …" spellcheck="false"></textarea>
+  </details>
+  <label class="option">
+    <input type="checkbox" name="online" value="true">
+    <span>Online lookups
+      <span class="muted small">(DNS, domain age, VirusTotal and AbuseIPDB reputation). Off by default:
+        lookups only read existing reports and never submit the email or visit its links.</span></span>
+  </label>
+  <div class="actions">
+    <button class="button button--primary" type="submit">Analyze</button>
+  </div>
+  <div class="privacy">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/></svg>
+    <span>The email is analyzed in memory and never stored. Its HTML is never rendered and its
+      images are never loaded, so the sender cannot tell it was opened.</span>
+  </div>
+</form>
+
+{% if samples %}
+<section class="card upload">
+  <div class="card__head"><h2>Try a sample</h2><span class="muted small">synthetic and harmless</span></div>
+  <div class="samples">
+    {% for sample in samples %}
+    <form method="post" action="/analyze/sample">
+      <input type="hidden" name="name" value="{{ sample.name }}">
+      <button class="button" type="submit">{{ sample.title }}</button>
+    </form>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}
