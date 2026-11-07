@@ -85,6 +85,10 @@ dayag analyze suspicious.eml --json | jq '.verdict, .findings[].id'
 # Online enrichment (RDAP and DNS need no keys)
 export DAYAG_VIRUSTOTAL_KEY=...   DAYAG_ABUSEIPDB_KEY=...
 dayag analyze suspicious.eml --online
+
+# Trust only Authentication-Results written by your own mail servers (not for Exchange
+# Online, whose headers carry no authserv-id)
+export DAYAG_TRUSTED_AUTHSERV=mx.contoso.com
 ```
 
 The web UI has the same analysis with drag-and-drop, sample emails and one-click downloads of the

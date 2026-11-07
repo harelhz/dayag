@@ -11,6 +11,7 @@ import re
 from collections.abc import Iterator
 from dataclasses import dataclass, field
 from email import policy
+from email.errors import MessageError
 from email.header import decode_header, make_header
 from email.message import EmailMessage, Message
 from email.parser import BytesParser
@@ -58,11 +59,24 @@ def load_message(raw: bytes) -> Message:
     return BytesParser(policy=policy.default).parsebytes(raw)
 
 
+def _clean(text: str) -> str:
+    """Decode raw 8-bit bytes, which the parser leaves as surrogate escapes, as UTF-8.
+
+    A string with surrogates cannot be encoded, so it would crash whatever
+    writes it out: a report, an export or a hash.
+    """
+    try:
+        return text.encode("utf-8", "surrogateescape").decode("utf-8", "replace")
+    except UnicodeEncodeError:  # a surrogate that is not an escaped byte
+        return text.encode("utf-8", "replace").decode("utf-8")
+
+
 def _decode_words(value: str) -> str:
     """Decode RFC 2047 encoded words (=?utf-8?b?...?=), tolerating bad input."""
+    value = _clean(value)
     try:
-        return str(make_header(decode_header(value)))
-    except (LookupError, UnicodeError, ValueError, TypeError):
+        return _clean(str(make_header(decode_header(value))))
+    except (LookupError, UnicodeError, ValueError, TypeError, MessageError):
         return value
 
 
@@ -86,7 +100,7 @@ def parse_addresses(message: Message, name: str) -> list[Address]:
     Decoding first would break on encoded names containing commas.
     """
     wanted = name.lower()
-    raw_values = [_unfold(str(v)) for k, v in message.raw_items() if k.lower() == wanted]
+    raw_values = [_clean(_unfold(str(v))) for k, v in message.raw_items() if k.lower() == wanted]
     result = []
     for display, address in getaddresses(raw_values):
         if address or display:
@@ -128,15 +142,15 @@ def _decode_text(part: Message) -> str:
         try:
             content = part.get_content()
             if isinstance(content, str):
-                return content
-        except (LookupError, UnicodeError, ValueError, AssertionError, KeyError):
+                return _clean(content)
+        except (LookupError, UnicodeError, ValueError, AssertionError, KeyError, MessageError):
             pass
     payload = part.get_payload(decode=True)
     data = payload if isinstance(payload, bytes) else b""
     charset = part.get_content_charset() or "utf-8"
     try:
         return data.decode(charset, errors="replace")
-    except LookupError:
+    except (LookupError, ValueError):  # unknown charset, or one with a NUL in its name
         return data.decode("utf-8", errors="replace")
 
 
@@ -144,7 +158,13 @@ def _payload_bytes(part: Message) -> bytes:
     if part.get_content_type() == "message/rfc822":
         payload = part.get_payload()
         if isinstance(payload, list) and payload and isinstance(payload[0], Message):
-            return payload[0].as_bytes()
+            # The parser keeps no copy of the original bytes, so the attached
+            # message is serialised again, which fails on malformed headers.
+            for flatten_policy in (payload[0].policy, policy.compat32):
+                try:
+                    return payload[0].as_bytes(policy=flatten_policy)
+                except (LookupError, UnicodeError, ValueError, TypeError, MessageError):
+                    continue
         return b""
     data = part.get_payload(decode=True)
     return data if isinstance(data, bytes) else b""

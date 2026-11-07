@@ -36,9 +36,21 @@ title, severity, points, rationale and ATT&CK techniques. The checks contain no 
 
 Any sender can add an `Authentication-Results: ...; dmarc=pass` header before sending. RFC 8601
 headers are added by the *receiving* server at the top of the message, so Dayag trusts the
-topmost header, plus others from the same server (same `authserv-id`). Lower headers that claim
-`pass` where the receiving server said otherwise become the `AUTH-FORGED-RESULTS` finding. The
-DHL sample has one.
+topmost header, plus any directly below it from the same server (same `authserv-id`). A lower
+header that copies the receiving server's `authserv-id` is not trusted. A topmost header with no
+results (`mx.example; none`) means the receiving server gave no verdict, not that the next header
+down should be believed. Lower headers that claim `pass` where the receiving server said otherwise,
+or gave no SPF, DKIM, DMARC or CompAuth verdict at all, become the `AUTH-FORGED-RESULTS` finding.
+The DHL sample has one.
+
+When the receiving server wrote a `Received-SPF` header but no `Authentication-Results`, every
+`Authentication-Results` header sits below a `Received` hop under the `Received-SPF` one. Dayag
+then trusts `Received-SPF` and treats all of them as written by the sender.
+
+Position alone cannot spot a forged header when the receiving server wrote no authentication
+headers at all. Set `DAYAG_TRUSTED_AUTHSERV` to your receiving servers' `authserv-id`s
+(comma-separated) and only their headers are trusted, wherever they sit. Exchange Online writes
+its headers without an `authserv-id`, so leave the setting unset for Microsoft 365 mail.
 
 Dayag does not re-verify DKIM itself. The receiving server checked the signature at delivery
 time, when the key was current. A later check can fail only because the key has been rotated.

@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+import pytest
 from conftest import build_email, ids, run
 
+from dayag.config import Config
 from dayag.headers import (
     is_internal_ip,
     originating_ips,
     parse_authentication_results,
     parse_received,
+    received_spf_above_auth,
     summarise_auth,
 )
 
@@ -57,6 +60,109 @@ def test_lower_header_cannot_override_the_receiving_server() -> None:
     summary = summarise_auth([MICROSOFT_AR.replace("spf=fail", "spf=fail"), forged], [], [])
     assert summary.dmarc == "fail"
     assert any("dmarc=pass claimed" in c for c in summary.contradictions)
+
+
+RECEIVER_NONE = "mx.victim-corp.example; none"
+RECEIVER_FAIL = (
+    "mx.victim-corp.example; spf=fail smtp.mailfrom=paypal.com; dkim=none; "
+    "dmarc=fail (p=REJECT) header.from=paypal.com"
+)
+FORGED_PAYPAL = (
+    "mail.attacker.example; spf=pass smtp.mailfrom=paypal.com; dkim=pass header.d=paypal.com; "
+    "dmarc=pass header.from=paypal.com"
+)
+PAYPAL_PHISH = {
+    "From": "PayPal <service@paypal.com>",
+    "Subject": "Your account has been limited",
+}
+
+
+def test_receiving_header_without_results_is_no_verdict() -> None:
+    summary = summarise_auth([RECEIVER_NONE, FORGED_PAYPAL], [], [])
+    assert summary.source == "mx.victim-corp.example"
+    assert (summary.spf, summary.dkim, summary.dmarc, summary.dkim_domains) == ("", "", "", [])
+    assert len(summary.contradictions) == 3
+    assert all("not verified by the receiving server" in c for c in summary.contradictions)
+
+
+def test_forged_header_below_empty_receiving_header_is_flagged() -> None:
+    report = run(
+        build_email({**PAYPAL_PHISH, "Authentication-Results": [RECEIVER_NONE, FORGED_PAYPAL]})
+    )
+    assert {"AUTH-MISSING", "AUTH-FORGED-RESULTS"} <= ids(report)
+    assert "AUTH-DMARC-PASS" not in ids(report)
+    assert report.auth.dmarc == ""
+
+
+def test_lower_header_copying_the_receivers_id_is_not_trusted() -> None:
+    copied = FORGED_PAYPAL.replace("mail.attacker.example", "mx.victim-corp.example")
+    summary = summarise_auth([RECEIVER_FAIL, GOOGLE_AR, copied], [], [])
+    assert (summary.spf, summary.dkim, summary.dmarc) == ("fail", "none", "fail")
+    assert summary.dkim_domains == []
+    assert any("dkim=pass claimed by 'mx.victim-corp.example'" in c for c in summary.contradictions)
+
+
+def test_adjacent_headers_from_the_receiving_server_are_combined() -> None:
+    # Postfix with separate SPF and DKIM milters adds one header each.
+    summary = summarise_auth(
+        [
+            "mx.contoso.com; dkim=pass header.d=contoso.com",
+            "mx.contoso.com; spf=pass smtp.mailfrom=contoso.com",
+        ],
+        [],
+        [],
+    )
+    assert (summary.spf, summary.dkim, summary.contradictions) == ("pass", "pass", [])
+
+
+def test_received_spf_beats_authentication_results_written_before_it() -> None:
+    report = run(
+        build_email(
+            {
+                **PAYPAL_PHISH,
+                "Received-SPF": "Fail (mx.victim-corp.example: domain of paypal.com does not "
+                "designate 203.0.113.9 as permitted sender) envelope-from=<service@paypal.com>",
+                "Received": "from mail.attacker.example (mail.attacker.example [203.0.113.9]) "
+                "by mx.victim-corp.example; Mon, 02 Nov 2026 10:00:10 +0000",
+                "Authentication-Results": FORGED_PAYPAL,
+            }
+        )
+    )
+    assert (report.auth.spf, report.auth.dmarc, report.auth.source) == ("fail", "", "Received-SPF")
+    assert {"AUTH-SPF-FAIL", "AUTH-FORGED-RESULTS"} <= ids(report)
+    assert "AUTH-DMARC-PASS" not in ids(report)
+
+
+def test_received_spf_above_auth_needs_a_hop_in_between() -> None:
+    # Gmail writes Received-SPF directly above its own Authentication-Results.
+    assert not received_spf_above_auth(["Received", "Received-SPF", "Authentication-Results"])
+    assert received_spf_above_auth(["Received-SPF", "Received", "Authentication-Results"])
+    assert not received_spf_above_auth(["Authentication-Results", "Received", "Received-SPF"])
+    assert not received_spf_above_auth(["Received-SPF", "Received"])
+
+
+def test_trusted_authserv_ignores_other_servers() -> None:
+    trusted = ("mx.victim-corp.example",)
+    summary = summarise_auth([FORGED_PAYPAL], [], [], trusted_authserv=trusted)
+    assert (summary.spf, summary.dkim, summary.dmarc, summary.source) == ("", "", "", "")
+    assert len(summary.contradictions) == 3
+
+    # Headers added above it by internal hops do not hide the receiving server's.
+    internal = "relay.internal.example; spf=pass smtp.mailfrom=paypal.com"
+    summary = summarise_auth([internal, RECEIVER_FAIL], [], [], trusted_authserv=trusted)
+    assert (summary.spf, summary.dmarc) == ("fail", "fail")
+    assert summary.source == "mx.victim-corp.example"
+
+
+def test_trusted_authserv_from_config(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("DAYAG_TRUSTED_AUTHSERV", "MX.Victim-Corp.example, mx2.victim-corp.example")
+    assert Config.from_env().trusted_authserv == (
+        "mx.victim-corp.example",
+        "mx2.victim-corp.example",
+    )
+    report = run(build_email({**PAYPAL_PHISH, "Authentication-Results": FORGED_PAYPAL}))
+    assert {"AUTH-MISSING", "AUTH-FORGED-RESULTS"} <= ids(report)
+    assert "AUTH-DMARC-PASS" not in ids(report)
 
 
 def test_arc_results_used_when_no_authentication_results() -> None:
