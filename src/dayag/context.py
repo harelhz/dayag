@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .filetypes import inspect_attachment
-from .headers import parse_received, summarise_auth
+from .headers import parse_received, received_spf_above_auth, summarise_auth
 from .htmlscan import HtmlScan
 from .model import Address, AttachmentInfo, AuthSummary, Hop, Link
 from .parsing import ParsedEmail
@@ -35,7 +35,7 @@ class Context:
         return self.sender.domain if self.sender else ""
 
 
-def build_context(email: ParsedEmail) -> Context:
+def build_context(email: ParsedEmail, trusted_authserv: tuple[str, ...] = ()) -> Context:
     html = HtmlScan()
     for body in email.html_bodies:
         html.scan(body)
@@ -58,6 +58,8 @@ def build_context(email: ParsedEmail) -> Context:
             email.headers("Authentication-Results"),
             email.headers("ARC-Authentication-Results"),
             email.headers("Received-SPF"),
+            trusted_authserv=trusted_authserv,
+            received_spf_first=received_spf_above_auth([k for k, _ in email.message.raw_items()]),
         ),
     )
 

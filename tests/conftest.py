@@ -54,6 +54,12 @@ def ids(report: Report) -> set[str]:
     return {f.rule.id for f in report.findings}
 
 
+@pytest.fixture(autouse=True)
+def _no_trusted_authserv(monkeypatch: pytest.MonkeyPatch) -> None:
+    """analyze() reads DAYAG_TRUSTED_AUTHSERV; keep the developer's setting out of the tests."""
+    monkeypatch.delenv("DAYAG_TRUSTED_AUTHSERV", raising=False)
+
+
 @pytest.fixture
 def sample_bytes():
     def load(name: str) -> bytes:

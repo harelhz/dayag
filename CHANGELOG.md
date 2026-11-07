@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- A forged `Authentication-Results` header below a receiving-server header with no results
+  (`mx.example; none`) was trusted. The topmost header is now chosen before empty ones are
+  dropped, and lower headers claiming a pass the receiving server did not verify are flagged.
+- A lower header copying the receiving server's `authserv-id` was trusted as the same server.
+- `Received-SPF` from the receiving server now beats `Authentication-Results` written below it.
+- New `DAYAG_TRUSTED_AUTHSERV` setting: trust only the named receiving servers' headers.
+- Malformed headers no longer crash the analysis: bad charsets and encoded words, attached
+  messages that cannot be re-serialised, a NUL in a body charset, and raw 8-bit bytes reaching
+  the STIX export. Raw UTF-8 headers are now decoded instead of shown as escapes.
+
 ## 0.1.0 - 2026-11-02
 
 First release.
