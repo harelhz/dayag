@@ -120,6 +120,11 @@ def _stix_time(moment: datetime) -> str:
     return moment.strftime("%Y-%m-%dT%H:%M:%S.") + f"{moment.microsecond // 1000:03d}Z"
 
 
+def _stix_uuid(name: str) -> uuid.UUID:
+    # uuid5 encodes the name as UTF-8, which fails on stray surrogates.
+    return uuid.uuid5(_NAMESPACE, name.encode("utf-8", "backslashreplace").decode("utf-8"))
+
+
 def iocs_to_stix(report: Report) -> str:
     """A STIX 2.1 bundle of the flagged indicators, ready for a TIP such as MISP or OpenCTI."""
     created = _stix_time(report.analyzed_at)
@@ -133,7 +138,7 @@ def iocs_to_stix(report: Report) -> str:
             {
                 "type": "indicator",
                 "spec_version": "2.1",
-                "id": f"indicator--{uuid.uuid5(_NAMESPACE, f'{ioc.type}:{ioc.value}')}",
+                "id": f"indicator--{_stix_uuid(f'{ioc.type}:{ioc.value}')}",
                 "created": created,
                 "modified": created,
                 "name": f"{ioc.type}: {defang(ioc.value)}",
@@ -146,7 +151,7 @@ def iocs_to_stix(report: Report) -> str:
                 "labels": ["phishing"],
             }
         )
-    bundle_id = uuid.uuid5(_NAMESPACE, "|".join(sorted(str(o["id"]) for o in objects)) or "empty")
+    bundle_id = _stix_uuid("|".join(sorted(str(o["id"]) for o in objects)) or "empty")
     return json.dumps(
         {"type": "bundle", "id": f"bundle--{bundle_id}", "objects": objects},
         indent=2,

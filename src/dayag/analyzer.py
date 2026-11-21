@@ -32,6 +32,7 @@ def analyze(
     """Analyse one email (RFC 5322 bytes, e.g. a saved .eml file)."""
     started = time.perf_counter()
     now = now or datetime.now(UTC)
+    config = config or Config.from_env()
     message = load_message(raw)
     findings: list[Finding] = []
     wrapper_subject = ""
@@ -49,7 +50,7 @@ def analyze(
         message = inner
 
     email = extract(message, len(raw))
-    ctx = build_context(email)
+    ctx = build_context(email, trusted_authserv=config.trusted_authserv)
     for check in ALL_CHECKS:
         findings += check(ctx)
 
@@ -57,7 +58,7 @@ def analyze(
     if online:
         from .enrich import run_lookups  # imported lazily: offline use needs no network code
 
-        found, lookups = run_lookups(ctx, config or Config.from_env(), client=client, now=now)
+        found, lookups = run_lookups(ctx, config, client=client, now=now)
         findings += found
 
     merged = merge_findings(findings)

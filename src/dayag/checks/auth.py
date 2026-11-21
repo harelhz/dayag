@@ -4,14 +4,18 @@ from __future__ import annotations
 
 from ..context import Context
 from ..domains import registrable_domain
-from ..model import Finding, hit
+from ..model import AuthSummary, Finding, hit
 
 
 def check_authentication(ctx: Context) -> list[Finding]:
     auth = ctx.auth
     findings: list[Finding] = []
     if not auth.present:
-        return [hit("AUTH-MISSING", "The message has no Authentication-Results header.")]
+        if auth.source:
+            missing = f"{auth.source} reported no SPF, DKIM or DMARC results."
+        else:
+            missing = "The message has no Authentication-Results header from the receiving server."
+        return [hit("AUTH-MISSING", missing), *_forged(auth)]
     source = f"according to {auth.source}" if auth.source else ""
 
     spf_domain = auth.spf_domain or "the envelope sender's domain"
@@ -64,12 +68,17 @@ def check_authentication(ctx: Context) -> list[Finding]:
     if auth.compauth == "fail":
         findings.append(hit("AUTH-COMPAUTH-FAIL", "Exchange Online reports compauth=fail."))
 
-    if auth.contradictions:
-        findings.append(
-            hit(
-                "AUTH-FORGED-RESULTS",
-                "A lower Authentication-Results header contradicts the receiving server.",
-                auth.contradictions,
-            )
+    return findings + _forged(auth)
+
+
+def _forged(auth: AuthSummary) -> list[Finding]:
+    if not auth.contradictions:
+        return []
+    return [
+        hit(
+            "AUTH-FORGED-RESULTS",
+            "A lower Authentication-Results header claims results the receiving server did not "
+            "report.",
+            auth.contradictions,
         )
-    return findings
+    ]

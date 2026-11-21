@@ -170,32 +170,70 @@ _RESULT_RANK = {
 }
 
 
+# Methods the summary is built from. A lower header claiming one of these passed is
+# flagged even when the receiving server gave no verdict for it.
+_SUMMARY_METHODS = ("spf", "dkim", "dmarc", "compauth")
+
+
+def received_spf_above_auth(header_names: list[str]) -> bool:
+    """Whether the receiving server wrote Received-SPF but no Authentication-Results.
+
+    True when the topmost Received-SPF sits above every Authentication-Results
+    header with a Received header in between: those Authentication-Results
+    were already in the message when it reached the server that checked SPF,
+    so the sender may have written them.
+    """
+    names = [n.lower() for n in header_names]
+    if "received-spf" not in names or "authentication-results" not in names:
+        return False
+    spf = names.index("received-spf")
+    auth = names.index("authentication-results")
+    return spf < auth and "received" in names[spf + 1 : auth]
+
+
 def summarise_auth(
-    auth_results: list[str], arc_results: list[str], received_spf: list[str]
+    auth_results: list[str],
+    arc_results: list[str],
+    received_spf: list[str],
+    *,
+    trusted_authserv: tuple[str, ...] = (),
+    received_spf_first: bool = False,
 ) -> AuthSummary:
     """Combine authentication headers into one verdict per method.
 
-    Only the topmost Authentication-Results header (and others from the same
-    server) is trusted: it was added by the receiving server. Anything lower
-    could have been written by the sender.
+    Only the receiving server's Authentication-Results are trusted: the topmost
+    header, plus any directly below it with the same authserv-id. Anything
+    lower could have been written by the sender. A topmost header with no
+    results ("mx.example; none") means no verdict, not "trust the next one".
+
+    trusted_authserv names the receiving servers' authserv-ids. When given,
+    the first block of headers from those servers is trusted instead, wherever
+    it sits. received_spf_first (see received_spf_above_auth) means the
+    receiving server wrote no Authentication-Results at all.
     """
     summary = AuthSummary()
     headers = [parse_authentication_results(v) for v in auth_results]
-    headers = [h for h in headers if h.results]
     if not headers and arc_results:
         # Forwarded mail: fall back to the newest ARC seal's results.
         arc = sorted(arc_results, key=lambda v: _arc_instance(v), reverse=True)[0]
         headers = [parse_authentication_results(re.sub(r"^\s*i=\d+\s*;", "", arc))]
-        headers = [h for h in headers if h.results]
+
+    trusted_ids = {t.lower() for t in trusted_authserv if t}
+    start: int | None = None
+    if trusted_ids:
+        start = next((i for i, h in enumerate(headers) if h.authserv_id in trusted_ids), None)
+    elif headers and not received_spf_first:
+        start = 0
 
     trusted: list[AuthHeader] = []
-    untrusted: list[AuthHeader] = []
-    if headers:
-        top = headers[0]
-        trusted.append(top)
-        for header in headers[1:]:
-            same_server = top.authserv_id and header.authserv_id == top.authserv_id
-            (trusted if same_server else untrusted).append(header)
+    untrusted = list(headers)
+    if start is not None:
+        top = headers[start]
+        end = start + 1
+        while end < len(headers) and _same_server(top, headers[end], trusted_ids):
+            end += 1
+        trusted = headers[start:end]
+        untrusted = headers[:start] + headers[end:]
         summary.source = top.authserv_id or "receiving server"
 
     methods: dict[str, list[MethodResult]] = {}
@@ -237,16 +275,27 @@ def summarise_auth(
     if compauth := methods.get("compauth"):
         summary.compauth = compauth[0].result
 
-    trusted_results = {m: r[0].result for m, r in methods.items()}
+    reported = {m: r[0].result for m, r in methods.items()}
+    reported.update({m: getattr(summary, m) for m in _SUMMARY_METHODS if getattr(summary, m)})
     for header in untrusted:
         for result in header.results:
-            reported = trusted_results.get(result.method)
-            if result.result == "pass" and reported and reported != "pass":
+            verdict = reported.get(result.method)
+            if result.result != "pass" or verdict == "pass":
+                continue
+            claimed = f"{result.method}=pass claimed by '{header.authserv_id or 'unknown'}'"
+            if verdict:
                 summary.contradictions.append(
-                    f"{result.method}=pass claimed by '{header.authserv_id or 'unknown'}', "
-                    f"receiving server reported {result.method}={reported}"
+                    f"{claimed}, receiving server reported {result.method}={verdict}"
                 )
+            elif result.method in _SUMMARY_METHODS:
+                summary.contradictions.append(f"{claimed}, not verified by the receiving server")
     return summary
+
+
+def _same_server(top: AuthHeader, header: AuthHeader, trusted_ids: set[str]) -> bool:
+    if trusted_ids:
+        return header.authserv_id in trusted_ids
+    return bool(top.authserv_id) and header.authserv_id == top.authserv_id
 
 
 def _arc_instance(value: str) -> int:
